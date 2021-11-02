@@ -6,6 +6,7 @@
 #include <malloc.h>
 #include <assert.h>
 
+
 /**
  * \fn size_t strlen(char * string)
  * \brief finding lenght of string
@@ -32,7 +33,6 @@ size_t _strlen(char * string){
 */
 
 char* _strcpy (char *dst, char *str){
-    if(_strlen(dst) < _strlen(str)) { return NULL; }
     size_t i = 0;
     for (; i < _strlen(str); i++){
         dst[i] = str[i];
@@ -63,11 +63,10 @@ char * _strchr(char * string, char symbol ){
  * \param src given string
 */
 
-char* _strdup (char *src){
+char* __strdup (char *src){
     if(src == NULL) { return NULL; }
-    char *str = NULL;
     size_t lenght = _strlen(src);
-    str = malloc(lenght + 1);
+    char *str = calloc(sizeof(char), lenght + 1);
     _strcpy(str, src);
     return str;
 }
@@ -127,26 +126,60 @@ void * _memset( void * memptr, char val, size_t num ){
 }
 
 /**
+ * \fn int _memcmp(char* str1, char* str2, size_t num)
+ * @brief Comparison of num elements of strings
+ * @param str1 First string
+ * @param str2 Second string
+ * @param num
+ * @return Numerical difference of characters in strings
+ */
+int _memcmp(char* str1, char* str2, size_t num) {
+    if (str1 == NULL || str1 == NULL) {
+        return NULL;
+    }
+
+    for (size_t i = 0; i < num; i++) {
+        if (str1[i] == str2[i]) {
+            continue;
+        } else if (str1[i] > str2[i]) {
+            return (str1[i] - str2[i]);
+        } else if (str1[i] < str2[i]) {
+            return (str1[i] - str2[i]);
+        }
+
+        str1++;
+        str2++;
+    }
+    return 0;
+}
+
+/**
  * \fn char * strstr(char * string1, char * string2 ) 
  * \brief Функция ищет первое вхождение подстроки string2 в строке string1. Возвращает указатель на первое вхождение строки string2   в строку string1, или пустой указатель, если строка string2 не является частью строки string1. В данном поиске нуль-символ не  учитывается.
  * \param string1 first string parametr     
  * \param string2 second string parametr
 */
 
-char * _strstr (char * string1, char * string2 ) {
-    char * needle_ptr = NULL, * haystack_ptr = NULL;
-    if (string1 == NULL || string2 == NULL) { return NULL; }
-    while (*string1) {
-        if (*string1 == *string2) {
-            int trigger_out = 1;
-            needle_ptr = string2;
-            haystack_ptr = string1;
-            while (*needle_ptr && *haystack_ptr) {
-                trigger_out = trigger_out && (*needle_ptr == *haystack_ptr);
-            }
-            if (trigger_out) { return string1; }
+char * _strstr (char* source, char* value) {
+    size_t source_len, value_len;
+
+    source_len = _strlen(source);
+    value_len = _strlen(value);
+
+    if (source == NULL || value == NULL) {
+        return NULL;
+    }
+
+    if (value_len == 0) {
+        return (char *) source;
+    }
+
+    while (source_len >= value_len) {
+        source_len--;
+        if (_memcmp(source, value, value_len) == 0) {
+            return (char*) source;
         }
-    ++string1;
+        source++;
     }
     return NULL;
 }
