@@ -34,15 +34,20 @@ Errors test_strchr(){
     }
     return OK;
 }
-/*
+
 Errors test_strdup(){
     char  str1[] = "Hello world";
-    if (__strdup(str1) == NULL) {
+    char* str2 =__strdup((char*)str1);
+    if (str2 == NULL) {
         printf("F*ck this sh*t I'm out\n");
         return error;
     }
+    if(strcmp(str1,"Hello world") != 0){
+        return error;
+    }
+    free(str2);
     return OK;
-}*/
+}
 
 Errors test_memcpy(){
     char str1[] = "Hello   world";
